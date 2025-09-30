@@ -1,0 +1,64 @@
+const a = {
+  b: {
+    c: 2,
+    d: 3,
+    f:{
+        c: 2,
+        d: 3, 
+    }
+  },
+  e: 4,
+};
+
+function isObject(obj) {
+  return Boolean(typeof obj == "object" && !Array.isArray(obj) && obj != null);
+}
+
+function flatten(obj) {
+  let result = {};
+  
+//   console.log(Object.entries(obj));
+  for (const [key, value] of Object.entries(obj)) {
+    if (isObject(value)) {
+      const flatted = flatten(value);
+      for (const [keyChild, valueChild] of Object.entries(flatted)) {
+        result[key + "." + keyChild] = valueChild;
+      }
+    } else {
+      result[key] = value;
+    }
+  }
+
+  return result;
+}
+
+
+function deflatten(obj){
+    if(!isObject(obj)) return obj;
+    
+    let result = {}
+    for(const [key, value] of Object.entries(obj)){
+        const indexOfDot = key.indexOf(".")
+        if(indexOfDot!=-1){
+            const keyName = key.slice(0,indexOfDot);
+            if(result.hasOwnProperty(keyName)){
+                result[keyName] = {...result[keyName], [key.slice(indexOfDot+1)]: value };
+            }else{
+                result[keyName]=  { [key.slice(indexOfDot+1)]: value }
+            }
+        }else{
+            result[key]= value;
+        }
+    }
+    
+    for(const [key, value] of Object.entries(result)){
+        result[key] = deflatten(value);
+    }
+    
+    return result;
+}
+
+
+console.log(flatten(a))
+const aa = flatten(a);
+console.log(deflatten(aa))
