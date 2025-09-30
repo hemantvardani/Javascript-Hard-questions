@@ -1,0 +1,21 @@
+const arr= [1, 2, [3, 4 ,[5 , 6, [7, 8, [9]]]]]
+
+console.log(arr)
+console.log(arr.flat(Infinity))
+
+Array.prototype.myFlatten = function(depth=1){
+    if(depth == 0 ) return this;
+    
+    const result = []
+    for(const element of this){
+        if(Array.isArray(element)) result.push(...element)
+        else result.push(element);
+    }
+    
+    if(result.some(element => Array.isArray(element)))
+    return result.myFlatten(depth-1);
+    
+    return result;
+}
+
+console.log(arr.myFlatten(Infinity))
